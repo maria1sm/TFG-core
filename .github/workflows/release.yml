@@ -1,4 +1,4 @@
-name: Build and Deploy API Users develop
+name: Build and Deploy API Core Release
 
 on:
   push:
@@ -11,39 +11,55 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    env:
+      SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
+      SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
+
     steps:
-      
+
       - name: Check out the repository
         uses: actions/checkout@v4
-      
-            
+
+
       - name: Print repository status
         run: git log -1
-      
-            
+
+
       - name: Set up JDK 21
         uses: actions/setup-java@v3
         with:
           java-version: '21'
           distribution: 'temurin'
-      
-            
+
+
       - name: Build with Maven
-        run: mvn clean package
-      
-            
+        run: mvn clean install
+
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
-  
-        
+
+
       - name: Log in to Docker Hub
         uses: azure/docker-login@v1
         with:
           login-server: registrytfg.azurecr.io
           username: ${{ secrets.AZURE_REGISTRY_USERNAME }}
           password: ${{ secrets.AZURE_REGISTRY_PASSWORD }}
-      
-            
-      - name: Build and push Docker image for API Users
+
+
+      - name: Build and push Docker image for API
         run: |
           docker buildx build --build-arg SPOTIFY_CLIENT_ID="${{ secrets.SPOTIFY_CLIENT_ID }}" \--build-arg SPOTIFY_CLIENT_SECRET="${{ secrets.SPOTIFY_CLIENT_SECRET }}" \-t ${{ secrets.AZURE_REGISTRY_SERVER }}/core:release -f Dockerfile --push .
+
+      - name: Configure kubectl
+        uses: azure/k8s-set-context@v1
+        with:
+          kubeconfig: ${{ secrets.KUBE_CONFIG }}
+
+      - name: Kubernetes manifests on develop
+        if: github.ref == 'refs/heads/release'
+        run: |
+          kubectl apply -f manifest/release-namespace.yml
+          kubectl apply -f manifest/release-deployment.yml
+          kubectl apply -f manifest/release-services.yml
