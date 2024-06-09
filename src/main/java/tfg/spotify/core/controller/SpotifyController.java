@@ -2,7 +2,6 @@ package tfg.spotify.core.controller;
 
 import com.google.gson.Gson;
 import org.apache.hc.core5.http.ParseException;
-import org.apache.tomcat.util.json.JSONParser;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -30,6 +30,8 @@ public class UserServiceImpl implements UserService {
     private final SpotifyApi spotifyApi;
     @Value("${users.api}")
     private String usersApiUrl;
+
+
     public UserServiceImpl(@Value("${spotify.client.id}") String clientId,
                                      @Value("${spotify.client.secret}") String clientSecret) {
         this.clientId = clientId;

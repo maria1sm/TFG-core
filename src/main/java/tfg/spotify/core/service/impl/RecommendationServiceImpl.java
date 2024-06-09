@@ -24,7 +24,6 @@ public class RecommendationServiceImpl implements RecommendationService {
     private final SpotifyApi spotifyApi;
     private final UserServiceImpl userService;
 
-    @Autowired
     public RecommendationServiceImpl(@Value("${spotify.client.id}") String clientId,
                                      @Value("${spotify.client.secret}") String clientSecret, UserServiceImpl userService) {
         this.clientId = clientId;
