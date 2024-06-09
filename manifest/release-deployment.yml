@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment-release
+  namespace: release
+  labels:
+    app: micros
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: micros
+  template:
+    metadata:
+      labels:
+        app: micros
+    spec:
+      containers:
+        - name: core
+          image: registrytfg.azurecr.io/core:release
+          ports:
+            - containerPort: 8080
+        - name: front
+          image: registrytfg.azurecr.io/front:release
+          ports:
+            - containerPort: 80
+        - name: dbapi
+          image: registrytfg.azurecr.io/dbapi:release
+          ports:
+            - containerPort: 8000
