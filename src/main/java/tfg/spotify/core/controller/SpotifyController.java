@@ -11,44 +11,50 @@ import se.michaelthelin.spotify.exceptions.SpotifyWebApiException;
 import se.michaelthelin.spotify.model_objects.special.SearchResult;
 import se.michaelthelin.spotify.model_objects.specification.Playlist;
 import se.michaelthelin.spotify.model_objects.specification.Recommendations;
+import tfg.spotify.core.model.DTO.PlaylistDTO;
 import tfg.spotify.core.model.DTO.RecommendationDTO;
-import tfg.spotify.core.model.DTO.RefreshTokenDTO;
 import tfg.spotify.core.model.DTO.SearchRequestDTO;
-import tfg.spotify.core.service.impl.RecommendationServiceImpl;
-import tfg.spotify.core.service.impl.SpotifyAuthImpl;
-import tfg.spotify.core.service.impl.UserServiceImpl;
+import tfg.spotify.core.service.RecommendationService;
+import tfg.spotify.core.service.UserService;
+
 
 import java.io.IOException;
 import java.util.Arrays;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("/api")
 public class SpotifyController {
-    private final RecommendationServiceImpl recommendationService;
-    private final UserServiceImpl userService;
+    private final RecommendationService recommendationService;
+    private final UserService userService;
 
-    public SpotifyController(RecommendationServiceImpl recommendationService, UserServiceImpl userService) {
+    public SpotifyController(RecommendationService recommendationService, UserService userService) {
         this.recommendationService = recommendationService;
         this.userService = userService;
     }
 
 
-
-//    @GetMapping(path="/new-releases")
-//    public Mono<ResponseEntity<Object>> getNewReleases() {
-//        return spotifyApiImpl.getNewReleases()
-//                .map(response -> ResponseEntity.ok().body(response))
-//                .defaultIfEmpty(ResponseEntity.notFound().build())
-//                .onErrorResume(e -> Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage())));
-//    }
-
     @GetMapping(path = "/user-profile")
     public Mono<ResponseEntity<Object>> getUserProfile(@RequestHeader("Authorization") String token) {
+        System.out.println("Trying to fetch user");
         return userService.getUserProfile(token)
                 .map(response -> ResponseEntity.ok().body(response))
                 .defaultIfEmpty(ResponseEntity.notFound().build())
-                .onErrorResume(e -> Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage())));
+                .onErrorResume(e -> Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error while fetching user")));
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<String> login (@RequestHeader("Authorization") String token){
+        try {
+            System.out.println("Loging in...");
+            userService.insertUser(token);
+            System.out.println(("Success"));
+            return ResponseEntity.ok("Login success");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(400).body(e.getMessage());
+        }
+
     }
 
     @PostMapping("/search")
@@ -79,25 +85,14 @@ public class SpotifyController {
     }
 
     @PostMapping("/create-playlist")
-    public ResponseEntity<String> createPlaylist(@RequestHeader("Authorization") String token,
-                                                   @RequestParam String playlistName,
-                                                   @RequestParam String[] trackUris) {
+    public ResponseEntity<String> createPlaylist(@RequestBody PlaylistDTO playlistDTO, @RequestHeader("Authorization") String token) {
         try {
-            Playlist playlist = recommendationService.createAndSavePlaylist(token, playlistName, trackUris);
+            Playlist playlist = recommendationService.createAndSavePlaylist(token, playlistDTO.getName(), playlistDTO.getTrackUris());
             Gson gson =  new Gson();
             return ResponseEntity.ok(gson.toJson(playlist));
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(500).body(null);
         }
     }
-
-//    @GetMapping("/refresh-token")
-//    public ResponseEntity<Object> refreshToken(@RequestHeader("token_data") RefreshTokenDTO refreshTokenDTO) {
-//        RefreshTokenDTO newTokenData = spotifyAuthImpl.refreshToken(refreshTokenDTO);
-//        if (newTokenData != null) {
-//            return ResponseEntity.ok(newTokenData);
-//        } else {
-//            return ResponseEntity.status(500).body("Error al refrescar el token");
-//        }
-//    }
 }

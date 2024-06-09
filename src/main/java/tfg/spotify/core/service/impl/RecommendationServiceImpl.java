@@ -13,11 +13,12 @@ import se.michaelthelin.spotify.requests.data.browse.GetRecommendationsRequest;
 import se.michaelthelin.spotify.requests.data.playlists.AddItemsToPlaylistRequest;
 import se.michaelthelin.spotify.requests.data.playlists.CreatePlaylistRequest;
 import se.michaelthelin.spotify.requests.data.search.SearchItemRequest;
+import tfg.spotify.core.service.RecommendationService;
 
 import java.io.IOException;
 
 @Service
-public class RecommendationServiceImpl {
+public class RecommendationServiceImpl implements RecommendationService {
     private final String clientId;
     private final String clientSecret;
     private final SpotifyApi spotifyApi;
@@ -37,11 +38,6 @@ public class RecommendationServiceImpl {
 
     public SearchResult searchItem(String query, String type, String token) throws IOException, SpotifyWebApiException, ParseException {
         System.out.println("search");
-        try{
-            userService.insertUser(token);
-        }catch (Exception e) {
-            System.out.println("Error al guardar usuario");
-        }
 
         SpotifyApi spotifyApi = new SpotifyApi.Builder()
                 .setAccessToken(token)
@@ -56,11 +52,6 @@ public class RecommendationServiceImpl {
 
     public Recommendations getRecommendations(String seedTracks, String seedArtists, String token) throws IOException, SpotifyWebApiException, ParseException {
         System.out.println("recommendation");
-        try{
-            userService.insertUser(token);
-        }catch (Exception e) {
-            System.out.println("Error al guardar usuario");
-        }
         SpotifyApi spotifyApi = new SpotifyApi.Builder()
                 .setAccessToken(token)
                 .build();
@@ -75,7 +66,7 @@ public class RecommendationServiceImpl {
     }
 
     public Playlist createAndSavePlaylist(String token, String playlistName, String[] trackUris) throws Exception {
-
+        System.out.println("Saving...");
         spotifyApi.setAccessToken(token);
         String userId = userService.getUser(token).getId();
         // Create the playlist
@@ -90,7 +81,7 @@ public class RecommendationServiceImpl {
                 .build();
 
         addItemsToPlaylistRequest.execute();
-
+        System.out.println("Saved");
         return playlist;
     }
 }
