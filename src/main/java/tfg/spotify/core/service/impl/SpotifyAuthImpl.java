@@ -24,6 +24,7 @@ public class SpotifyAuthImpl {
     public SpotifyAuthImpl ()  {
 
     }
+    //
     public RefreshTokenDTO refreshToken(RefreshTokenDTO refreshToken) {
         SpotifyApi spotifyApi = new SpotifyApi.Builder()
                 .setClientId(clientId)
