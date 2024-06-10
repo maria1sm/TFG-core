@@ -30,6 +30,8 @@ public class UserServiceImpl implements UserService {
     private final SpotifyApi spotifyApi;
     @Value("${users.api}")
     private String usersApiUrl;
+    @Value("${auth.header}")
+    private String authHeader;
 
 
     public UserServiceImpl(@Value("${spotify.client.id}") String clientId,
@@ -83,7 +85,7 @@ public class UserServiceImpl implements UserService {
             // Use the WebClient to post the user data
             WebClient webClient = WebClient.builder()
                     .baseUrl(usersApiUrl)
-                    .defaultHeader(HttpHeaders.AUTHORIZATION, "Joaquin_Apruebame01")
+                    .defaultHeader(HttpHeaders.AUTHORIZATION, authHeader)
                     .build();
             webClient.post()
                     .bodyValue(userDTO)
