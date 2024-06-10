@@ -239,7 +239,7 @@ La segunda cosa positiva que saco del desarrollo de este proyecto es el aprendiz
 
 Documentación:
 - [React](https://reactjs.org/docs/getting-started.html)
-- [Spotify API](https://developers.google.com/identity/sign-in/web/sign-in)
+- [Spotify API](https://developer.spotify.com/documentation/web-api)
 - [FastAPI](https://fastapi.tiangolo.com/)
 - [spotify-web-api-java](https://github.com/spotify-web-api-java/spotify-web-api-java/blob/master/README.md)
 
