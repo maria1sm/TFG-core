@@ -63,3 +63,8 @@ jobs:
           kubectl apply -f manifest/release-namespace.yml
           kubectl apply -f manifest/release-deployment.yml
           kubectl apply -f manifest/release-services.yml
+
+      - name: Restart Kubernetes deployment
+        if: github.ref == 'refs/heads/release'
+        run: |
+          kubectl rollout restart deployment/deployment-release --namespace=release
