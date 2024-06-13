@@ -17,17 +17,17 @@ spec:
     spec:
       containers:
         - name: core
-          image: registrytfg.azurecr.io/core:release
+          image: registrytfgsp.azurecr.io/core:release
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
         - name: front
-          image: registrytfg.azurecr.io/front:release
+          image: registrytfgsp.azurecr.io/front:release
           imagePullPolicy: Always
           ports:
             - containerPort: 80
         - name: dbapi
-          image: registrytfg.azurecr.io/dbapi:release
+          image: registrytfgsp.azurecr.io/dbapi:release
           imagePullPolicy: Always
           ports:
             - containerPort: 8000

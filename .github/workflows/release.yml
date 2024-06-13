@@ -44,7 +44,7 @@ jobs:
       - name: Log in to Docker Hub
         uses: azure/docker-login@v1
         with:
-          login-server: registrytfg.azurecr.io
+          login-server: registrytfgsp.azurecr.io
           username: ${{ secrets.AZURE_REGISTRY_USERNAME }}
           password: ${{ secrets.AZURE_REGISTRY_PASSWORD }}
 
