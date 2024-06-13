@@ -72,7 +72,7 @@ Entre las motivaciones también se encuentra el interés por aprender a desplega
     - Database header Auth string
 
 4. **Configurar variables de entorno:**  
-   Si es necesario, en caso de añadir o quitar algún Github secreta, segurar que las variables de entorno de cada proyecto se ajustan según estos cambios
+   Si es necesario, en caso de añadir o quitar algún Github secret, asegurar que las variables de entorno de cada proyecto se ajustan según estos cambios.
 
 5. **Instalar Docker y Kubernetes en la máquina virtual de azure, además de configurar el Cluster en la máquina**
 
